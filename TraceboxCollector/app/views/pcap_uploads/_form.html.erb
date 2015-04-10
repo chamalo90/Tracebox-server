@@ -1,0 +1,31 @@
+<%= form_for @pcap_upload, :html => {:multipart => true} do |f| %>
+  <% if @pcap_upload.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@pcap_upload.errors.count, "error") %> prohibited this pcap_upload from being saved:</h2>
+
+      <ul>
+      <% @pcap_upload.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :script %><br>
+    <%= f.number_field :script %>
+  </div>
+  <div class="field">
+    <%= f.label :source %><br>
+    <%= f.text_field :source %>
+  </div>
+  <div>
+    <label>Pcap</label>
+    <%= f.file_field :uploader%>
+
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+

@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Pcap Uploads</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Script</th>
+      <th>Source</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    
+    <% @pcap_uploads.each do |pcap_upload| %>
+      <tr>
+        <td><%= pcap_upload.script %></td>
+        <td><%= pcap_upload.source %></td>
+        <td><%= link_to 'Show', pcap_upload %></td>
+        <td><%= link_to 'Edit', edit_pcap_upload_path(pcap_upload) %></td>
+        <td><%= link_to 'Destroy', pcap_upload, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Pcap upload', new_pcap_upload_path %>

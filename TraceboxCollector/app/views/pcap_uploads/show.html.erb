@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Script:</strong>
+  <%= @pcap_upload.script %>
+</p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @pcap_upload.source %>
+</p>
+
+<%= link_to 'Edit', edit_pcap_upload_path(@pcap_upload) %> |
+<%= link_to 'Back', pcap_uploads_path %>
