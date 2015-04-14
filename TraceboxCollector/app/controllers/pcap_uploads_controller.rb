@@ -47,7 +47,7 @@ def curl
     @pcap_upload = PcapUpload.new
     @pcap_upload.source = params[:source]
     @pcap_upload.script = params[:script]
-    @pcap_upload.uploader = File.new(File.join(Rails.root, "/public/uploads/pcap_upload/uploader/" << filename))
+    @pcap_upload.uploader = File.new(File.join(Rails.root, "/public/uploads/" << filename))
 
 
     respond_to do |format|
