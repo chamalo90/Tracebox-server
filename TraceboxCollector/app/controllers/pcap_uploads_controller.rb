@@ -39,7 +39,7 @@ def curl
     tempfile.close
     tempfile.unlink
 
-    File.open(File.join(Rails.root, "/public/uploads/pcap_upload/uploader/" << filename), 'w') { |f| 
+    File.open(File.join(Rails.root, "/public/uploads/" << filename), 'w') { |f| 
       f.write(data) 
     }
     
