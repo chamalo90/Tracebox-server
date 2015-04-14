@@ -23,20 +23,32 @@ class PcapUploadsController < ApplicationController
   end
 
 #POST /pcap_uploads/curl
-  def curl
-    tempfile = Tempfile.new("dataupload")
+def curl
+    #logger.debug "%%%%%%%%% CURL %%%%%%%%%%%%%%%"
+    #logger.debug "#{params[:script]}"
+    #logger.debug "#{params[:source]}"
+
+    filename||= "#{SecureRandom.urlsafe_base64}.pcap"
+    
+    tempfile = Tempfile.new("upload")
     tempfile.binmode
     tempfile << request.body.read
     tempfile.rewind
 
-    data_params = params.slice(:filename, :type, :head, :source, :script).merge(:tempfile => tempfile)
-    data = ActionDispatch::Http::UploadedFile.new(data_params)
+    data = tempfile.read.split("&").last.bytes
+    tempfile.close
+    tempfile.unlink
+
+    File.open(File.join(Rails.root, "/public/uploads/pcap_upload/uploader/" << filename), 'w') { |f| 
+      f.write(data) 
+    }
+    
 
     @pcap_upload = PcapUpload.new
     @pcap_upload.source = params[:source]
     @pcap_upload.script = params[:script]
-    @pcap_upload.uploader = PcapUploader.new
-    @pcap_upload.uploader.store!(tempfile.path)
+    @pcap_upload.uploader = File.new(File.join(Rails.root, "/public/uploads/pcap_upload/uploader/" << filename))
+
 
     respond_to do |format|
       if @pcap_upload.save
@@ -44,21 +56,19 @@ class PcapUploadsController < ApplicationController
       else
         format.json { render :json => @postcard.errors, :status => :unprocessable_entity }
       end
+      tempfile.close
+      tempfile.unlink
     end
   end
+
 
 
   # POST /pcap_uploadsx
   # POST /pcap_uploads.json
   def create
-    
-
-
     @pcap_upload = PcapUpload.new(pcap_upload_params)
 
-    #@pcap_upload.uploader.store!(File.open(@pcap_upload.uploader.current_path))
-
-    logger.debug "Coucou #{@pcap_upload.uploader.to_s}"
+    @pcap_upload.uploader.store!(File.open(@pcap_upload.uploader.current_path))
     respond_to do |format|
       if @pcap_upload.save!
         format.html { redirect_to @pcap_upload, notice: 'Pcap upload was successfully created.' }
