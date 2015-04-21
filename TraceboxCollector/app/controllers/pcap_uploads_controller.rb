@@ -24,10 +24,6 @@ class PcapUploadsController < ApplicationController
 
 #POST /pcap_uploads/curl
 def curl
-    #logger.debug "%%%%%%%%% CURL %%%%%%%%%%%%%%%"
-    #logger.debug "#{params[:script]}"
-    #logger.debug "#{params[:source]}"
-
     filename||= "#{SecureRandom.urlsafe_base64}.pcap"
     
     tempfile = Tempfile.new("upload")
@@ -45,8 +41,6 @@ def curl
     
 
     @pcap_upload = PcapUpload.new
-    @pcap_upload.source = params[:source]
-    @pcap_upload.script = params[:script]
     @pcap_upload.uploader = File.new(File.join(Rails.root, "/public/uploads/" << filename))
 
 
