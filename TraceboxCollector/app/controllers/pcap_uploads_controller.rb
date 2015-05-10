@@ -22,36 +22,23 @@ class PcapUploadsController < ApplicationController
   def edit
   end
 
-#POST /pcap_uploads/curl
-def curl
+  #POST /pcap_uploads/curl
+  def curl
     filename||= "#{SecureRandom.urlsafe_base64}.pcap"
-    
-    tempfile = Tempfile.new("upload")
-    tempfile.binmode
-    tempfile << request.body.read
-    tempfile.rewind
-
-    data = tempfile.read.split("&").last.bytes
-    tempfile.close
-    tempfile.unlink
-
-    File.open(File.join(Rails.root, "/public/uploads/" << filename), 'w') { |f| 
-      f.write(data) 
+    #Rails.logger.debug params.inspect
+    #puts params[:file].inspect
+    data = params[:file]
+    t=  data.tempfile
+    File.open(File.join(Rails.root, "/public/uploads/" << filename), 'w+b') { |f| 
+        t.rewind
+        while  !t.eof?
+          f.write(t.read)
+        end
     }
-    
-
-    @pcap_upload = PcapUpload.new
-    @pcap_upload.uploader = File.new(File.join(Rails.root, "/public/uploads/" << filename))
 
 
     respond_to do |format|
-      if @pcap_upload.save
         format.json { head :ok }
-      else
-        format.json { render :json => @postcard.errors, :status => :unprocessable_entity }
-      end
-      tempfile.close
-      tempfile.unlink
     end
   end
 
